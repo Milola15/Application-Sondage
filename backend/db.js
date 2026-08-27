@@ -3,20 +3,17 @@ require('dotenv').config()
 
 let pool
 
+console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'trouvée' : 'introuvable')
+
 if (process.env.DATABASE_URL) {
-  // Connexion Railway via URL complète
-  pool = mysql.createPool({
-    uri: process.env.DATABASE_URL,
-    waitForConnections: true,
-    connectionLimit: 10,
-  })
+  pool = mysql.createPool(process.env.DATABASE_URL)
 } else {
-  // Connexion locale
   pool = mysql.createPool({
-    host:     process.env.DB_HOST,
-    user:     process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
+    host:     process.env.DB_HOST || process.env.MYSQLHOST,
+    user:     process.env.DB_USER || process.env.MYSQLUSER,
+    password: process.env.DB_PASSWORD || process.env.MYSQLPASSWORD,
+    database: process.env.DB_NAME || process.env.MYSQLDATABASE,
+    port:     process.env.MYSQLPORT || 3306,
   })
 }
 
